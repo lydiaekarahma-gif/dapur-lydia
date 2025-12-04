@@ -1,10 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { RECIPES } from '../constants';
 
-// Initialize Gemini
-// Note: process.env.API_KEY is injected by the environment.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 const SYSTEM_INSTRUCTION = `
 You are "Chef Lydia", a friendly, warm, and expert Indonesian chef assistant for the web app "Resep Dapur Lydia".
 You specialize in Indonesian home cooking, specifically Nasi Goreng, Soto Ayam, and Seblak.
@@ -22,6 +18,10 @@ If a user asks about a recipe NOT in this list, politely suggest one of the avai
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
   try {
+    // Initialize Gemini inside the function to prevent app crash on load if API key is missing
+    // Note: process.env.API_KEY is injected by the environment.
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+    
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',
       config: {
@@ -46,6 +46,6 @@ export const sendMessageToGemini = async (message: string): Promise<string> => {
     return response.text || "Maaf, saya sedang sibuk di dapur. Coba tanya lagi nanti ya!";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "Maaf, ada masalah koneksi dengan dapur digital kami. Silakan coba lagi.";
+    return "Maaf, ada masalah koneksi dengan dapur digital kami. Pastikan API Key sudah dikonfigurasi dengan benar.";
   }
 };

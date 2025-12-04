@@ -7,6 +7,14 @@
     <title>Resep Dapur Lydia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // Polyfill process to prevent "process is not defined" error in browser
+      window.process = {
+        env: {
+          NODE_ENV: 'production'
+        }
+      };
+    </script>
+    <script>
       tailwind.config = {
         theme: {
           extend: {
